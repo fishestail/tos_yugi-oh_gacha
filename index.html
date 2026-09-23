@@ -2,75 +2,157 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>神魔之塔『遊戲王 怪獸之決鬥』抽卡模擬器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔法石封印活動『遊戲王 怪獸之決鬥』抽卡模擬器</title>
     <style>
         :root {
-            --bg-color: #0f131a;
-            --panel-bg: #1a202c;
-            --panel-card: #252d3d;
-            --accent-green: #10b981;
-            --gold: #f59e0b;
-            --blue: #3b82f6;
-            --purple: #8b5cf6;
+            --bg-deep: #090a0f;
+            --ygo-dark: #12141c;
+            --ygo-panel: #161924;
+            --ygo-card: #1c2030;
+            --ygo-gold: #eab308;
+            --ygo-gold-bright: #fef08a;
+            --ygo-egypt-gold: #d97706;
+            --tos-green: #10b981;
+            --text-main: #f1f5f9;
+            --text-gold: #fde047;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            box-sizing: border-box;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: "Cinzel", "Times New Roman", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
             height: 100vh;
-            overflow: hidden;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-
-        .left-panel {
-            width: 400px;
-            background-color: var(--panel-bg);
-            border-radius: 12px;
-            padding: 16px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            padding: 14px 20px;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(ellipse at 50% 0%, rgba(217, 119, 6, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
         }
 
-        .header-box {
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .title-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .main-title {
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            background: linear-gradient(180deg, #fff7ed 0%, #fde047 50%, #ca8a04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(234, 179, 8, 0.35);
+        }
+        .version-badge {
+            font-size: 10px;
+            font-family: monospace;
+            background: rgba(234, 179, 8, 0.1);
+            color: var(--ygo-gold);
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .workspace {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .left-col {
+            width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pool-panel {
+            background: var(--ygo-panel);
+            border: 1px solid #2e354a;
+            border-top: 2px solid var(--ygo-egypt-gold);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+
+        .pool-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #2d3748;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #242b3d;
+            margin-bottom: 8px;
         }
-
-        .title {
-            font-size: 16px;
+        .pool-series-name {
+            font-size: 13px;
+            color: var(--text-gold);
             font-weight: bold;
-            color: #e2e8f0;
+            letter-spacing: 0.5px;
         }
 
-        .rate-toggle-btn {
-            background: #374151;
-            color: #9ca3af;
-            border: 1px solid #4b5563;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+        .toggle-btn {
+            background: #1e2436;
+            color: #94a3b8;
+            border: 1px solid #3b4560;
+            padding: 3px 10px;
+            border-radius: 16px;
             cursor: pointer;
+            font-size: 11px;
             font-weight: bold;
             transition: 0.2s;
         }
-        .rate-toggle-btn.active {
-            background: #ef4444;
-            color: #ffffff;
+        .toggle-btn.active {
+            background: #dc2626;
+            color: #fff;
             border-color: #f87171;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .pity-picker-row {
+            background: #111420;
+            padding: 6px 10px;
+            border-radius: 5px;
+            border: 1px solid #2d3448;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+        .pity-select {
+            background: #090c14;
+            color: #fde047;
+            border: 1px solid var(--ygo-egypt-gold);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            outline: none;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .card-list {
@@ -78,307 +160,456 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding-right: 4px;
+            gap: 5px;
+            padding-right: 3px;
         }
+        .card-list::-webkit-scrollbar { width: 4px; }
+        .card-list::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
 
-        .card-row {
+        .card-item {
             display: flex;
             align-items: center;
-            padding: 6px 10px;
-            background: var(--panel-card);
-            border-radius: 8px;
-            gap: 10px;
-            border-left: 4px solid transparent;
+            background: var(--ygo-card);
+            border-radius: 5px;
+            padding: 5px 8px;
+            gap: 8px;
+            font-size: 12px;
+            border: 1px solid #272f44;
         }
-        .card-row.grand { border-left-color: var(--gold); }
-        .card-row.rare { border-left-color: var(--blue); }
-        .card-row.normal { border-left-color: #4b5563; }
-
-        .card-row img {
-            width: 44px;
-            height: 44px;
-            border-radius: 6px;
+        .card-item img {
+            width: 36px;
+            height: 36px;
+            border-radius: 3px;
             object-fit: cover;
-            background: #1e2533;
-            display: block;
+            background: #090b12;
+            flex-shrink: 0;
         }
 
-        .card-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .card-meta { flex: 1; min-width: 0; }
         .card-name {
-            font-size: 13px;
-            font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 500;
         }
-        .card-rate {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-top: 2px;
-        }
+        .card-item.grand .card-name { color: #fef08a; font-weight: bold; }
+        .card-item.rare .card-name { color: #93c5fd; }
 
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
+        .card-rate-val {
+            font-size: 11px;
+            color: #94a3b8;
+            font-family: monospace;
+            margin-right: 4px;
         }
-
-        button.action-btn {
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
+        .card-owned-badge {
+            background: #064e3b;
+            color: #34d399;
+            font-size: 10px;
+            font-family: monospace;
+            padding: 1px 6px;
+            border-radius: 3px;
+            min-width: 18px;
+            text-align: center;
             font-weight: bold;
-            cursor: pointer;
-            transition: 0.15s;
+        }
+
+        .ctrl-panel {
+            background: var(--ygo-panel);
+            border: 1px solid #2e354a;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        .ctrl-title {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .pull-btn-row {
+            display: flex;
+            gap: 8px;
         }
         .btn-pull {
-            background-color: var(--accent-green);
-            color: white;
-        }
-        .btn-pull:hover { background-color: #059669; }
-        .btn-reset {
-            background-color: #374151;
-            color: #e5e7eb;
-            grid-column: span 2;
-        }
-        .btn-reset:hover { background-color: #4b5563; }
-
-        .right-panel {
             flex: 1;
-            background-color: var(--panel-bg);
-            border-radius: 12px;
-            padding: 16px;
+            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+            color: #fff;
+            border: 1px solid #34d399;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+            transition: 0.15s;
+            letter-spacing: 1px;
+        }
+        .btn-pull:hover {
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+            transform: translateY(-1px);
+        }
+
+        .right-col {
+            flex: 1;
+            background: var(--ygo-panel);
+            border: 1px solid #2e354a;
+            border-top: 2px solid var(--ygo-egypt-gold);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
             min-width: 0;
         }
 
-        .hud-bar {
+        .hud-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--panel-card);
-            padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-bottom: 1px solid #242b3d;
+            background: #10131d;
         }
-
-        .hud-stats {
+        .hud-left {
             display: flex;
-            gap: 20px;
-            font-size: 14px;
-            font-weight: 600;
+            align-items: center;
+            gap: 10px;
         }
-        .hud-stats span {
-            color: var(--accent-green);
-            font-size: 16px;
-        }
-
-        .hud-actions {
+        .tab-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #d97706, #78350f);
+            border: 1px solid #fbbf24;
             display: flex;
-            gap: 8px;
-        }
-        .tab-btn {
-            background: #374151;
-            color: #cbd5e1;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .tab-btn.active {
-            background: var(--purple);
-            color: white;
-        }
-
-        .content-body {
-            flex: 1;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-            gap: 12px;
-        }
-
-        .card-tile {
-            background: var(--panel-card);
-            border-radius: 8px;
-            padding: 8px;
-            text-align: center;
-            position: relative;
-            border: 2px solid transparent;
-        }
-        .card-tile.grand { border-color: var(--gold); }
-        .card-tile.rare { border-color: var(--blue); }
-        .card-tile.normal { border-color: #374151; }
-
-        .card-tile img {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 6px;
-            object-fit: cover;
-            background: #1e2533;
-            display: block;
-        }
-        .card-tile .badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(239, 68, 68, 0.95);
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 10px;
-        }
-        .card-tile .title {
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
             font-size: 12px;
-            margin-top: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #fff;
+        }
+        .hud-tab-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f8fafc;
+            letter-spacing: 0.5px;
         }
 
-        .history-list {
-            display: none;
-            flex-direction: column;
+        .hud-center-buttons {
+            display: flex;
             gap: 6px;
         }
-        .history-item {
-            background: var(--panel-card);
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .hud-btn {
+            background: #1c2234;
+            color: #cbd5e1;
+            border: 1px solid #33405c;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.15s;
+        }
+        .hud-btn:hover { background: #28344e; color: #fff; }
+        .hud-btn.primary { 
+            background: linear-gradient(180deg, #7e22ce 0%, #581c87 100%);
+            border-color: #a855f7; 
+            color: #f3e8ff; 
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
+        .hud-right-counters {
+            display: flex;
+            gap: 5px;
         }
-        .modal-content {
-            background: #1e2533;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 650px;
-            width: 90%;
+        .stat-block {
+            background: #080a10;
+            border: 1px solid #202739;
+            border-radius: 4px;
+            padding: 3px 10px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            min-width: 54px;
         }
-        .modal-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            color: #f3f4f6;
+        .stat-label { font-size: 9px; color: #64748b; font-weight: bold; }
+        .stat-val { font-size: 13px; font-weight: 900; color: #f8fafc; font-family: monospace; }
+        .stat-val.gold { color: #fde047; }
+
+        .bag-container {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            background-color: #0b0d14;
+            background-image: 
+                linear-gradient(rgba(26, 33, 51, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 33, 51, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-        .modal-grid {
+        .bag-container::-webkit-scrollbar { width: 5px; }
+        .bag-container::-webkit-scrollbar-thumb { background: #28334a; border-radius: 3px; }
+
+        .bag-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
             gap: 10px;
-            margin-bottom: 20px;
         }
-        .modal-card {
-            background: #2b3548;
-            border-radius: 8px;
-            padding: 6px;
-            border: 2px solid transparent;
+
+        .bag-card {
+            background: #151824;
+            border-radius: 6px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            border: 1.5px solid #293247;
+            transition: transform 0.15s;
         }
-        .modal-card.grand { border-color: var(--gold); box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
-        .modal-card.rare { border-color: var(--blue); }
-        .modal-card img {
+        .bag-card:hover { transform: scale(1.08); z-index: 5; }
+
+        .card-top-tag {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8.5px;
+            padding: 1px 2px 3px;
+            line-height: 1;
+        }
+        .badge-new {
+            background: #dc2626;
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+        .draw-index {
+            color: #64748b;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .bag-card img {
             width: 100%;
             aspect-ratio: 1;
             border-radius: 4px;
             object-fit: cover;
-            background: #1e2533;
+            background: #090b12;
             display: block;
         }
-        .modal-card .name {
-            font-size: 11px;
+
+        .bag-card-name {
+            font-size: 9.5px;
             margin-top: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        @keyframes strongRainbowGlow {
+            0% {
+                border-color: #ff007f;
+                box-shadow: 0 0 12px rgba(255, 0, 127, 0.95), 0 0 20px rgba(255, 0, 127, 0.45), inset 0 0 6px rgba(255, 0, 127, 0.6);
+            }
+            25% {
+                border-color: #f59e0b;
+                box-shadow: 0 0 12px rgba(245, 158, 11, 0.95), 0 0 20px rgba(245, 158, 11, 0.45), inset 0 0 6px rgba(245, 158, 11, 0.6);
+            }
+            50% {
+                border-color: #10b981;
+                box-shadow: 0 0 12px rgba(16, 185, 129, 0.95), 0 0 20px rgba(16, 185, 129, 0.45), inset 0 0 6px rgba(16, 185, 129, 0.6);
+            }
+            75% {
+                border-color: #06b6d4;
+                box-shadow: 0 0 14px rgba(6, 182, 212, 0.95), 0 0 22px rgba(6, 182, 212, 0.45), inset 0 0 6px rgba(6, 182, 212, 0.6);
+            }
+            100% {
+                border-color: #ff007f;
+                box-shadow: 0 0 12px rgba(255, 0, 127, 0.95), 0 0 20px rgba(255, 0, 127, 0.45), inset 0 0 6px rgba(255, 0, 127, 0.6);
+            }
+        }
+
+        @keyframes strongGoldGlow {
+            0% {
+                border-color: #d97706;
+                box-shadow: 0 0 8px rgba(217, 119, 6, 0.8), inset 0 0 4px rgba(217, 119, 6, 0.4);
+            }
+            50% {
+                border-color: #fef08a;
+                box-shadow: 0 0 18px rgba(253, 224, 71, 1), 0 0 24px rgba(234, 179, 8, 0.6), inset 0 0 8px rgba(253, 224, 71, 0.8);
+            }
+            100% {
+                border-color: #d97706;
+                box-shadow: 0 0 8px rgba(217, 119, 6, 0.8), inset 0 0 4px rgba(217, 119, 6, 0.4);
+            }
+        }
+
+        .bag-card.grand {
+            border: 3px solid #ff007f;
+            animation: strongRainbowGlow 3s infinite linear;
+        }
+        .bag-card.rare {
+            border: 2.5px solid #f59e0b;
+            animation: strongGoldGlow 2s infinite ease-in-out;
+        }
+
+        .history-view {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .history-row {
+            background: #111420;
+            padding: 7px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #232b3e;
+        }
+
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+        .modal-box {
+            background: #131724;
+            border: 1px solid var(--ygo-egypt-gold);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 640px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.9);
+        }
+        .modal-header-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 14px;
+            color: #fde047;
+            letter-spacing: 1px;
         }
         .modal-close-btn {
-            background: var(--accent-green);
+            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
             color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 6px;
+            border: 1px solid #34d399;
+            padding: 8px 28px;
+            border-radius: 5px;
             font-weight: bold;
+            font-size: 13px;
             cursor: pointer;
         }
-/* 强制所有角色头像高清锐化显示，防止模糊发虚 */
-        .bag-card img,
-        .card-item img {
-            image-rendering: -webkit-optimize-contrast !important;
-            image-rendering: crisp-edges !important;
+
+        .stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin: 12px 0 18px;
         }
+        .stat-table th, .stat-table td {
+            padding: 7px;
+            border-bottom: 1px solid #232d42;
+            text-align: center;
+        }
+        .stat-table th { background: #0c0f18; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-    <div class="left-panel">
-        <div class="header-box">
-            <span class="title">『遊戲王 怪獸之決鬥』卡匣</span>
-            <button class="rate-toggle-btn" id="rateToggleBtn" onclick="toggleRate()">未加倍</button>
-        </div>
-
-        <div class="card-list" id="cardList"></div>
-
-        <div class="btn-group">
-            <button class="action-btn btn-pull" onclick="drawCards(1)">單抽 (5石)</button>
-            <button class="action-btn btn-pull" onclick="drawCards(10)">十連抽 (50石)</button>
-            <button class="action-btn btn-reset" onclick="resetAll()">重置全部數據</button>
+    <div class="header-title-area">
+        <div class="title-left">
+            <h1 class="main-title">魔法石封印活動『遊戲王 怪獸之決鬥』抽卡模擬器</h1>
+            <span class="version-badge">DUEL VER.2026</span>
         </div>
     </div>
 
-    <div class="right-panel">
-        <div class="hud-bar">
-            <div class="hud-stats">
-                <div>已抽：<span id="totalDraws">0</span> 次</div>
-                <div>消耗：<span id="totalStones">0</span> 粒魔法石</div>
-                <div>距離大獎保底：<span id="pityCount">35</span> 抽</div>
+    <div class="workspace">
+        <div class="left-col">
+            <div class="pool-panel">
+                <div class="pool-header">
+                    <span class="pool-series-name">『遊戲王 怪獸之決鬥』石抽系列</span>
+                    <button class="toggle-btn" id="rateToggle" onclick="toggleBoost()">未加倍</button>
+                </div>
+
+                <div class="pity-picker-row">
+                    <span>🎯 35抽保底大獎指定：</span>
+                    <select class="pity-select" id="pitySelector" onchange="setPityTarget()">
+                        <option value="1">武藤遊戲＆破壞龍鋼多拉</option>
+                        <option value="2">闇遊戲＆黑魔導</option>
+                    </select>
+                </div>
+
+                <div class="card-list" id="cardListDom"></div>
             </div>
-            <div class="hud-actions">
-                <button class="tab-btn active" id="tabBag" onclick="switchView('bag')">背包</button>
-                <button class="tab-btn" id="tabHistory" onclick="switchView('history')">歷程</button>
+
+            <div class="ctrl-panel">
+                <div class="ctrl-title">抽卡操作面板</div>
+                <div class="pull-btn-row">
+                    <button class="btn-pull" onclick="executeDraw(1)">單抽 (5石)</button>
+                    <button class="btn-pull" onclick="executeDraw(10)">十連抽 (50石)</button>
+                </div>
             </div>
         </div>
 
-        <div class="content-body">
-            <div class="inventory-grid" id="inventoryGrid"></div>
-            <div class="history-list" id="historyList"></div>
+        <div class="right-col">
+            <div class="hud-header">
+                <div class="hud-left">
+                    <div class="tab-avatar">千</div>
+                    <span class="hud-tab-title">召喚獸背包</span>
+                </div>
+                <div class="hud-center-buttons">
+                    <button class="hud-btn primary" onclick="openStatsModal()">📊 統計數據</button>
+                    <button class="hud-btn" id="btnBagTab" onclick="switchView('bag')">背包</button>
+                    <button class="hud-btn" id="btnHistTab" onclick="switchView('history')">歷程</button>
+                    <button class="hud-btn" onclick="clearAllData()">清空重置</button>
+                </div>
+                <div class="hud-right-counters">
+                    <div class="stat-block">
+                        <div class="stat-label">總抽</div>
+                        <div class="stat-val" id="hudTotal">0</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-label">消耗魔法石</div>
+                        <div class="stat-val" id="hudStones">0</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-label">距保底</div>
+                        <div class="stat-val gold" id="hudPity">35</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bag-container" id="bagContainer">
+                <div class="bag-grid" id="bagGridDom"></div>
+                <div class="history-view" id="historyDom"></div>
+            </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="drawModal">
-        <div class="modal-content">
-            <div class="modal-title" id="modalTitle">獲得召喚獸</div>
-            <div class="modal-grid" id="modalGrid"></div>
-            <button class="modal-close-btn" onclick="closeModal()">確認收下</button>
+    <div class="modal-mask" id="statsModal">
+        <div class="modal-box">
+            <div class="modal-header-title">📊 抽卡機率統計數據</div>
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">召喚獸</th>
+                        <th>階級</th>
+                        <th>已抽數量</th>
+                        <th>實際產出率</th>
+                        <th>設定機率</th>
+                    </tr>
+                </thead>
+                <tbody id="statTableBody"></tbody>
+            </table>
+            <button class="modal-close-btn" onclick="closeModal('statsModal')">關閉</button>
         </div>
     </div>
 
@@ -396,168 +627,181 @@
         let isBoosted = false;
         let totalDraws = 0;
         let pityCount = 35;
-        let inventory = {};
-        let historyLogs = [];
+        let pityTargetId = 1;
+        let pullHistory = [];
+        let ownedCounts = {};
 
-        function toggleRate() {
-            isBoosted = !isBoosted;
-            const btn = document.getElementById("rateToggleBtn");
-            btn.classList.toggle("active", isBoosted);
-            btn.innerText = isBoosted ? "加倍中 🔥" : "未加倍";
-            renderCardList();
+        function setPityTarget() {
+            pityTargetId = parseInt(document.getElementById("pitySelector").value);
         }
 
-        function renderCardList() {
-            const listEl = document.getElementById("cardList");
-            listEl.innerHTML = POOL.map(card => {
+        function toggleBoost() {
+            isBoosted = !isBoosted;
+            const btn = document.getElementById("rateToggle");
+            btn.classList.toggle("active", isBoosted);
+            btn.innerText = isBoosted ? "加倍中 🔥" : "未加倍";
+            renderLeftList();
+        }
+
+        function renderLeftList() {
+            const dom = document.getElementById("cardListDom");
+            dom.innerHTML = POOL.map(card => {
                 const rate = (isBoosted ? card.boostedRate : card.normalRate) * 100;
+                const count = ownedCounts[card.name] || 0;
                 return `
-                    <div class="card-row ${card.type}">
+                    <div class="card-item ${card.type}">
                         <img src="${card.img}" alt="${card.name}">
-                        <div class="card-info">
+                        <div class="card-meta">
                             <div class="card-name">${card.star}★ ${card.name}</div>
-                            <div class="card-rate">${rate.toFixed(3).replace(/\\.?0+$/, '')}%</div>
                         </div>
+                        <span class="card-rate-val">${rate.toFixed(3).replace(/\\.?0+$/, '')}%</span>
+                        <span class="card-owned-badge">${count}</span>
                     </div>
                 `;
             }).join("");
         }
 
-        function pullSingle() {
+        function pullOne() {
             totalDraws++;
             pityCount--;
 
-            let drawnCard = null;
+            let picked = null;
+            let isPity = false;
 
             if (pityCount <= 0) {
-                const grandList = POOL.filter(c => c.type === "grand");
-                drawnCard = grandList[Math.floor(Math.random() * grandList.length)];
+                picked = POOL.find(c => c.id === pityTargetId);
                 pityCount = 35;
+                isPity = true;
             } else {
                 const rand = Math.random();
                 let acc = 0;
                 for (let card of POOL) {
                     acc += isBoosted ? card.boostedRate : card.normalRate;
                     if (rand <= acc) {
-                        drawnCard = card;
+                        picked = card;
                         break;
                     }
                 }
-                if (!drawnCard) drawnCard = POOL[POOL.length - 1];
-
-                if (drawnCard.type === "grand") {
-                    pityCount = 35;
-                }
+                if (!picked) picked = POOL[POOL.length - 1];
             }
 
-            inventory[drawnCard.name] = (inventory[drawnCard.name] || 0) + 1;
+            const isNew = !ownedCounts[picked.name];
+            ownedCounts[picked.name] = (ownedCounts[picked.name] || 0) + 1;
 
-            historyLogs.unshift({
-                index: totalDraws,
-                card: drawnCard
-            });
+            const record = {
+                order: totalDraws,
+                card: picked,
+                isNew: isNew,
+                isPity: isPity
+            };
 
-            return drawnCard;
+            pullHistory.push(record);
+            return record;
         }
 
-        function drawCards(times) {
-            let sessionPulls = [];
+        function executeDraw(times) {
             for (let i = 0; i < times; i++) {
-                sessionPulls.push(pullSingle());
+                pullOne();
             }
+
             updateHUD();
-            renderInventory();
-            renderHistory();
-            showModal(sessionPulls);
+            renderLeftList();
+            renderBagGrid();
+            renderHistoryDom();
+
+            const container = document.getElementById("bagContainer");
+            container.scrollTop = container.scrollHeight;
         }
 
         function updateHUD() {
-            document.getElementById("totalDraws").innerText = totalDraws;
-            document.getElementById("totalStones").innerText = totalDraws * 5;
-            document.getElementById("pityCount").innerText = pityCount;
+            document.getElementById("hudTotal").innerText = totalDraws;
+            document.getElementById("hudStones").innerText = totalDraws * 5;
+            document.getElementById("hudPity").innerText = pityCount;
         }
 
-        function renderInventory() {
-            const grid = document.getElementById("inventoryGrid");
-            grid.innerHTML = "";
-
-            POOL.forEach(card => {
-                const count = inventory[card.name] || 0;
-                if (count > 0) {
-                    grid.innerHTML += `
-                        <div class="card-tile ${card.type}">
-                            <div class="badge">x${count}</div>
-                            <img src="${card.img}" alt="${card.name}">
-                            <div class="title">${card.name}</div>
+        function renderBagGrid() {
+            const grid = document.getElementById("bagGridDom");
+            grid.innerHTML = pullHistory.map(item => {
+                const seq = String(item.order).padStart(3, '0');
+                return `
+                    <div class="bag-card ${item.card.type}">
+                        <div class="card-top-tag">
+                            ${item.isNew ? '<span class="badge-new">NEW</span>' : '<span></span>'}
+                            <span class="draw-index">${seq}</span>
                         </div>
-                    `;
-                }
-            });
+                        <img src="${item.card.img}" alt="${item.card.name}">
+                        <div class="bag-card-name">${item.card.name}</div>
+                    </div>
+                `;
+            }).join("");
         }
 
-        function renderHistory() {
-            const list = document.getElementById("historyList");
-            list.innerHTML = historyLogs.slice(0, 50).map(log => `
-                <div class="history-item">
-                    <span>第 ${log.index} 抽</span>
-                    <span style="color: ${log.card.type === 'grand' ? 'var(--gold)' : (log.card.type === 'rare' ? 'var(--blue)' : '#cbd5e1')}">
-                        ${log.card.name}
+        function renderHistoryDom() {
+            const dom = document.getElementById("historyDom");
+            dom.innerHTML = [...pullHistory].reverse().map(item => `
+                <div class="history-row">
+                    <span>第 ${item.order} 抽 ${item.isPity ? '<b style="color:#ef4444;">[35抽保底]</b>' : ''}</span>
+                    <span style="color: ${item.card.type === 'grand' ? 'var(--ygo-gold-bright)' : (item.card.type === 'rare' ? '#93c5fd' : '#94a3b8')}">
+                        ${item.card.name}
                     </span>
                 </div>
             `).join("");
         }
 
-        function showModal(cards) {
-            const modal = document.getElementById("drawModal");
-            const grid = document.getElementById("modalGrid");
-            document.getElementById("modalTitle").innerText = cards.length > 1 ? "🎉 十連抽結果" : "🎉 抽卡結果";
-            
-            grid.innerHTML = cards.map(card => `
-                <div class="modal-card ${card.type}">
-                    <img src="${card.img}" alt="${card.name}">
-                    <div class="name">${card.name}</div>
-                </div>
-            `).join("");
+        function openStatsModal() {
+            const tbody = document.getElementById("statTableBody");
+            tbody.innerHTML = POOL.map(card => {
+                const count = ownedCounts[card.name] || 0;
+                const actualRate = totalDraws > 0 ? ((count / totalDraws) * 100).toFixed(2) : "0.00";
+                const settingRate = ((isBoosted ? card.boostedRate : card.normalRate) * 100).toFixed(2);
+                const tagColor = card.type === 'grand' ? 'color:#fde047;font-weight:bold;' : (card.type === 'rare' ? 'color:#93c5fd;' : 'color:#94a3b8;');
+                const typeName = card.type === 'grand' ? '大獎' : (card.type === 'rare' ? '二獎' : '小獎');
 
-            modal.style.display = "flex";
+                return `
+                    <tr>
+                        <td style="text-align:left; font-weight:500;">${card.name}</td>
+                        <td style="${tagColor}">${typeName}</td>
+                        <td style="font-weight:bold;">${count}</td>
+                        <td style="color:#10b981; font-weight:bold;">${actualRate}%</td>
+                        <td style="color:#94a3b8;">${settingRate}%</td>
+                    </tr>
+                `;
+            }).join("");
+
+            document.getElementById("statsModal").style.display = "flex";
         }
 
-        function closeModal() {
-            document.getElementById("drawModal").style.display = "none";
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
         }
 
         function switchView(view) {
-            const bagGrid = document.getElementById("inventoryGrid");
-            const historyList = document.getElementById("historyList");
-            const tabBag = document.getElementById("tabBag");
-            const tabHistory = document.getElementById("tabHistory");
-
+            const bag = document.getElementById("bagGridDom");
+            const hist = document.getElementById("historyDom");
             if (view === 'bag') {
-                bagGrid.style.display = "grid";
-                historyList.style.display = "none";
-                tabBag.classList.add("active");
-                tabHistory.classList.remove("active");
+                bag.style.display = "grid";
+                hist.style.display = "none";
             } else {
-                bagGrid.style.display = "none";
-                historyList.style.display = "flex";
-                tabBag.classList.remove("active");
-                tabHistory.classList.add("active");
+                bag.style.display = "none";
+                hist.style.display = "flex";
             }
         }
 
-        function resetAll() {
-            if (confirm("確定要重置所有抽卡數據嗎？")) {
+        function clearAllData() {
+            if (confirm("確定要清空所有背包與抽卡紀錄嗎？")) {
                 totalDraws = 0;
                 pityCount = 35;
-                inventory = {};
-                historyLogs = [];
+                pullHistory = [];
+                ownedCounts = {};
                 updateHUD();
-                renderInventory();
-                renderHistory();
+                renderLeftList();
+                renderBagGrid();
+                renderHistoryDom();
             }
         }
 
-        renderCardList();
+        renderLeftList();
+        updateHUD();
     </script>
 </body>
 </html>
